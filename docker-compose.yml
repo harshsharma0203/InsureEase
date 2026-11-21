@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: insureease_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: insureease_db
+      MYSQL_USER: insureease_user
+      MYSQL_PASSWORD: insureease_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: insureease_backend
+    restart: always
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=production-secret-key-change-me-in-production-2026
+      - ALLOWED_HOSTS=*
+      - DB_ENGINE=mysql
+      - DB_NAME=insureease_db
+      - DB_USER=insureease_user
+      - DB_PASSWORD=insureease_password
+      - DB_HOST=db
+      - DB_PORT=3306
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - backend_media:/app/media
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: insureease_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
+  backend_media:

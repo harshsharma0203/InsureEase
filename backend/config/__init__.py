@@ -1,0 +1,9 @@
+import pymysql
+
+pymysql.install_as_MySQLdb()
+
+try:
+    from django.db.backends.mysql.base import DatabaseWrapper
+    DatabaseWrapper.check_database_version_supported = lambda self: None
+except Exception:
+    pass
