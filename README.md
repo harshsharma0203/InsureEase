@@ -1,4 +1,4 @@
-# InsureEase – InsureGroup Management Platform (P20)
+# InsureEase – InsureGroup Management Platform 
 
 [![Full-Stack](https://img.shields.io/badge/Stack-Django%20%2B%20React-blue.svg)](https://github.com/)
 [![License](https://img.shields.io/badge/License-Proprietary-green.svg)](https://github.com/)
